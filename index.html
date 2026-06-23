@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wasteland Improv | Stories Survive</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#111111;
+    --surface:#1b1b1b;
+    --text:#f2f0eb;
+    --accent:#c8a46b;
+    --muted:#8d8d8d;
+    --border:#2d2d2d;
+    --max-width:1200px;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.7;
+}
+
+img{
+    max-width:100%;
+    display:block;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+.container{
+    width:min(92%, var(--max-width));
+    margin:0 auto;
+}
+
+section{
+    padding:6rem 0;
+}
+
+h1,h2,h3{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+}
+
+h2{
+    font-size:3rem;
+    margin-bottom:1rem;
+}
+
+.section-intro{
+    max-width:700px;
+    color:var(--muted);
+    margin-bottom:3rem;
+}
+
+nav{
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:100;
+    backdrop-filter:blur(12px);
+    background:rgba(17,17,17,0.9);
+    border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.nav-inner{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:1rem 0;
+}
+
+.logo{
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.5rem;
+    letter-spacing:1px;
+}
+
+.nav-links{
+    display:flex;
+    gap:2rem;
+}
+
+.nav-links a{
+    color:var(--muted);
+    transition:.2s;
+}
+
+.nav-links a:hover{
+    color:var(--accent);
+}
+
+.hero{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(rgba(17,17,17,.55), rgba(17,17,17,.85)),
+        url("images/hero.jpg");
+    background-size:cover;
+    background-position:center;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:850px;
+}
+
+.eyebrow{
+    color:var(--accent);
+    text-transform:uppercase;
+    letter-spacing:4px;
+    font-size:.85rem;
+    margin-bottom:1rem;
+}
+
+.hero h1{
+    font-size:clamp(4rem,10vw,7rem);
+    line-height:.9;
+    margin-bottom:1rem;
+}
+
+.tagline{
+    font-size:1.6rem;
+    color:var(--accent);
+    margin-bottom:2rem;
+}
+
+.hero p{
+    max-width:650px;
+    font-size:1.15rem;
+    color:#d8d8d8;
+    margin-bottom:2.5rem;
+}
+
+.button{
+    display:inline-block;
+    padding:1rem 2rem;
+    border:1px solid var(--accent);
+    color:var(--accent);
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-size:.9rem;
+    transition:.25s;
+}
+
+.button:hover{
+    background:var(--accent);
+    color:#111;
+}
+
+.grid{
+    display:grid;
+    gap:2rem;
+}
+
+.shows-grid{
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+}
+
+.card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    padding:2rem;
+}
+
+.card h3{
+    font-size:2rem;
+    margin-bottom:.5rem;
+}
+
+.card .date{
+    color:var(--accent);
+    margin-bottom:1rem;
+}
+
+.feature{
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:4rem;
+    align-items:center;
+}
+
+.feature-image{
+    min-height:500px;
+    background:url("images/wasteland-show.jpg") center/cover;
+    border:1px solid var(--border);
+}
+
+.cast-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:2rem;
+}
+
+.cast-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    overflow:hidden;
+}
+
+.cast-photo{
+    aspect-ratio:4/5;
+    background:#2b2b2b;
+}
+
+.cast-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.cast-content{
+    padding:1.5rem;
+}
+
+.cast-content h3{
+    font-size:2rem;
+}
+
+.role{
+    color:var(--accent);
+    margin-bottom:1rem;
+}
+
+.cta{
+    text-align:center;
+    background:var(--surface);
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+}
+
+.cta h2{
+    margin-bottom:1rem;
+}
+
+footer{
+    padding:4rem 0;
+}
+
+.footer-grid{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:2rem;
+    flex-wrap:wrap;
+}
+
+.socials{
+    display:flex;
+    gap:1.5rem;
+}
+
+.socials a{
+    color:var(--muted);
+}
+
+.socials a:hover{
+    color:var(--accent);
+}
+
+.small{
+    color:var(--muted);
+    font-size:.9rem;
+}
+
+@media(max-width:900px){
+
+    .feature{
+        grid-template-columns:1fr;
+    }
+
+    .hero h1{
+        font-size:4rem;
+    }
+
+    h2{
+        font-size:2.5rem;
+    }
+
+    .nav-links{
+        display:none;
+    }
+}
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="container nav-inner">
+        <div class="logo">WASTELAND IMPROV</div>
+
+        <div class="nav-links">
+            <a href="#show">The Show</a>
+            <a href="#dates">Dates</a>
+            <a href="#company">Company</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<header class="hero">
+
+    <div class="container hero-content">
+
+        <div class="eyebrow">
+            Bristol Narrative Improvisation
+        </div>
+
+        <h1>WASTELAND<br>IMPROV</h1>
+
+        <div class="tagline">
+            Stories survive.
+        </div>
+
+        <p>
+            Award-winning improvised theatre set in the ruins of tomorrow.
+            Every month, a new settlement. Every show, a new story.
+            Nothing is scripted.
+        </p>
+
+        <a href="https://your-ticket-link.com" class="button">
+            Book Tickets
+        </a>
+
+    </div>
+
+</header>
+
+<section id="dates">
+
+    <div class="container">
+
+        <h2>Upcoming Performances</h2>
+
+        <p class="section-intro">
+            Join us as we explore new communities, impossible choices,
+            and the fragile hope that remains after the end of the world.
+        </p>
+
+        <div class="grid shows-grid">
+
+            <article class="card">
+                <div class="date">18 July 2026</div>
+                <h3>Tales From The Wasteland</h3>
+                <p>
+                    A completely improvised post-apocalyptic story inspired
+                    by a single audience suggestion.
+                </p>
+            </article>
+
+            <article class="card">
+                <div class="date">22 August 2026</div>
+                <h3>Tales From The Wasteland</h3>
+                <p>
+                    New settlement. New survivors. New story.
+                </p>
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section id="show">
+
+    <div class="container feature">
+
+        <div>
+
+            <h2>Tales From The Wasteland</h2>
+
+            <p>
+                Tales From The Wasteland is an improvised theatrical
+                experience set after the collapse of modern civilisation.
+            </p>
+
+            <br>
+
+            <p>
+                Inspired by a single audience suggestion, the cast creates
+                a fully original story following the inhabitants of a
+                struggling settlement trying to survive in a changed world.
+            </p>
+
+            <br>
+
+            <p>
+                No script.<br>
+                No planning.<br>
+                One story, told once.
+            </p>
+
+        </div>
+
+        <div class="feature-image"></div>
+
+    </div>
+
+</section>
+
+<section id="company">
+
+    <div class="container">
+
+        <h2>The Company</h2>
+
+        <p class="section-intro">
+            Wasteland Improv brings together performers passionate about
+            long-form storytelling, character-driven narratives, and
+            theatrical improvisation.
+        </p>
+
+        <div class="cast-grid">
+
+            <div class="cast-card">
+
+                <div class="cast-photo">
+                    <img src="images/pete.jpg" alt="Pete Leaman">
+                </div>
+
+                <div class="cast-content">
+                    <h3>Pete Leaman</h3>
+                    <div class="role">Artistic Director</div>
+
+                    <p>
+                        Bristol-based improviser, producer and creator of
+                        Tales From The Wasteland. Pete specialises in
+                        long-form narrative improvisation and immersive
+                        theatrical worlds.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="cast-card">
+
+                <div class="cast-photo">
+                    <img src="images/cast2.jpg" alt="Cast Member">
+                </div>
+
+                <div class="cast-content">
+                    <h3>Cast Member</h3>
+                    <div class="role">Performer</div>
+
+                    <p>
+                        Add biography here.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="cast-card">
+
+                <div class="cast-photo">
+                    <img src="images/cast3.jpg" alt="Cast Member">
+                </div>
+
+                <div class="cast-content">
+                    <h3>Cast Member</h3>
+                    <div class="role">Performer</div>
+
+                    <p>
+                        Add biography here.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="cta">
+
+    <div class="container">
+
+        <h2>Join the Settlement</h2>
+
+        <p class="section-intro" style="margin:auto auto 2rem;">
+            Follow our journey, hear about upcoming shows,
+            and discover what survives next.
+        </p>
+
+        <a href="https://your-ticket-link.com" class="button">
+            Book Tickets
+        </a>
+
+    </div>
+
+</section>
+
+<footer id="contact">
+
+    <div class="container footer-grid">
+
+        <div>
+            <div class="logo">WASTELAND IMPROV</div>
+            <div class="small">
+                Stories survive.
+            </div>
+        </div>
+
+        <div class="socials">
+            <a href="#">Instagram</a>
+            <a href="#">Facebook</a>
+            <a href="#">YouTube</a>
+            <a href="mailto:hello@wastelandimprov.co.uk">Email</a>
+        </div>
+
+    </div>
+
+</footer>
+
+</body>
+</html>
