@@ -292,6 +292,22 @@ footer{
     font-size:.9rem;
 }
 
+.show-image{
+    width:100%;
+    aspect-ratio:16/9;
+    object-fit:cover;
+    margin:-2rem -2rem 1.5rem -2rem;
+    width:calc(100% + 4rem);
+    border-bottom:1px solid var(--border);
+}
+
+.small-button{
+    display:inline-block;
+    margin-top:1.5rem;
+    padding:.75rem 1.25rem;
+    font-size:.8rem;
+}
+
 @media(max-width:900px){
 
     .feature{
@@ -356,34 +372,66 @@ footer{
         <h2>Upcoming Performances</h2>
 
         <p class="section-intro">
-            Join us as we explore new communities, impossible choices,
-            and the fragile hope that remains after the end of the world.
+            Join us as we explore new communities, impossible choices, and the fragile hope that remains after the end of the world.
         </p>
 
         <div class="grid shows-grid">
 
-            <article class="card">
+            <article class="card"></article>
+                <img class="show-image"
+                     src="images/show-july.jpg"
+                     alt="Tales From The Wasteland">
+            
                 <div class="date">10 July 2026</div>
-                <h3>Pride Special!</h3>
+            
+                <h3>Pride Special</h3>
+            
                 <p>
                     This Pride special celebrates the colourful, chaotic, and wonderfully diverse communities that thrive after the end of the world. Expect mutants, raiders, questionable fashion choices, and enough queer joy to survive any apocalypse. All profits from this show will be donated to Bristol Pride to support its work promoting equality, inclusion, and LGBTQ+ rights.
                 </p>
+            
+                <a class="button small-button"
+                   href="https://hdfst.uk/e147438">
+                    Book Tickets
+                </a>
             </article>
 
-            <article class="card">
+            <article class="card"></article>
+                <img class="show-image"
+                     src="images/show-august.jpg"
+                     alt="Tales From The Wasteland">
+            
                 <div class="date">20 - 22 August 2026</div>
+            
                 <h3>Camden Fringe (3 Nights)</h3>
+            
                 <p>
                     We return to Camden Fringe for the 3rd year with an even bigger show.
                 </p>
+            
+                <a class="button small-button"
+                   href="https://camdenfringe.com/events/tales-from-the-wasteland-post-apocalyptic-improv/">
+                    Book Tickets
+                </a>
             </article>
 
-            <article class="card">
-                <div class="date">3 September 2026</div>
+            <article class="card"></article>
+                <img class="show-image"
+                     src="images/show-sept.jpg"
+                     alt="Tales From The Wasteland">
+            
+                <div class="date">03 September 2026</div>
+            
                 <h3>Loco Klub</h3>
+            
                 <p>
                     If the world was ending, what would be the one thing you’d want to survive? Join us as we explore a new world and find out what’s left over after Earth’s devastation
                 </p>
+            
+                <a class="button small-button"
+                   href="https://hdfst.uk/e152139">
+                    Book Tickets
+                </a>
             </article>
 
         </div>
