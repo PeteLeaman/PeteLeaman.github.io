@@ -183,13 +183,19 @@ nav{
 }
 
 .shows-grid{
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
 }
 
 .card{
     background:var(--surface);
     border:1px solid var(--border);
     padding:2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.card p {
+    flex-grow: 1;
 }
 
 .card h3{
@@ -357,7 +363,7 @@ footer{
             Improvised comedy theatre set in the ruins of tomorrow.
         </p>
 
-        <a href="https://linktr.ee/wasteland_improv" class="button">
+        <a href="https://linktr.ee/wasteland_improv" class="button" target="_blank">
             Book Tickets
         </a>
 
@@ -378,9 +384,7 @@ footer{
         <div class="grid shows-grid">
 
             <article class="card">
-                <img class="show-image"
-                     src="images/show-july.jpg"
-                     alt="Tales From The Wasteland">
+                <img class="show-image" src="images/show-july.jpg">
             
                 <div class="date">10 July 2026</div>
             
@@ -390,16 +394,13 @@ footer{
                     This Pride special celebrates the colourful, chaotic, and wonderfully diverse communities that thrive after the end of the world. Expect mutants, raiders, questionable fashion choices, and enough queer joy to survive any apocalypse. All profits from this show will be donated to Bristol Pride to support its work promoting equality, inclusion, and LGBTQ+ rights.
                 </p>
             
-                <a class="button small-button"
-                   href="https://hdfst.uk/e147438">
+                <a class="button small-button" href="https://hdfst.uk/e147438" target="_blank">
                     Book Tickets
                 </a>
             </article>
 
             <article class="card">
-                <img class="show-image"
-                     src="images/show-august.jpg"
-                     alt="Tales From The Wasteland">
+                <img class="show-image" src="images/show-august.jpg">
             
                 <div class="date">20 - 22 August 2026</div>
             
@@ -409,16 +410,13 @@ footer{
                     We return to Camden Fringe for the 3rd year with an even bigger show.
                 </p>
             
-                <a class="button small-button"
-                   href="https://camdenfringe.com/events/tales-from-the-wasteland-post-apocalyptic-improv/">
+                <a class="button small-button" href="https://camdenfringe.com/events/tales-from-the-wasteland-post-apocalyptic-improv/" target="_blank">
                     Book Tickets
                 </a>
             </article>
 
             <article class="card">
-                <img class="show-image"
-                     src="images/show-sept.jpg"
-                     alt="Tales From The Wasteland">
+                <img class="show-image" src="images/show-sept.jpg">
             
                 <div class="date">03 September 2026</div>
             
@@ -428,8 +426,7 @@ footer{
                     If the world was ending, what would be the one thing you’d want to survive? Join us as we explore a new world and find out what’s left over after Earth’s devastation
                 </p>
             
-                <a class="button small-button"
-                   href="https://hdfst.uk/e152139">
+                <a class="button small-button" href="https://hdfst.uk/e152139" target="_blank">
                     Book Tickets
                 </a>
             </article>
@@ -656,7 +653,7 @@ footer{
             Follow our journey, hear about upcoming shows, and discover what survives next.
         </p>
 
-        <a href="https://linktr.ee/wasteland_improv" class="button">
+        <a href="https://linktr.ee/wasteland_improv target="_blank"" class="button">
             Book Tickets
         </a>
 
@@ -676,9 +673,9 @@ footer{
         </div>
 
         <div class="socials">
-            <a href="https://www.instagram.com/wasteland_improv/">Instagram</a>
-            <a href="https://www.facebook.com/wastelandimprov">Facebook</a>
-            <a href="mailto:wastelandimprov@gmail.co.uk">Email</a>
+            <a href="https://www.instagram.com/wasteland_improv/" target="_blank">Instagram</a>
+            <a href="https://www.facebook.com/wastelandimprov" target="_blank">Facebook</a>
+            <a href="mailto:wastelandimprov@gmail.co.uk" target="_blank">Email</a>
         </div>
 
     </div>
