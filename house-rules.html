@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>House Rules — Control Panel</title>
+<style>
+  :root{
+    --bg: #14100d;
+    --panel: #201a15;
+    --panel-raised: #2a2119;
+    --border: #4a3a26;
+    --gold: #d4a73a;
+    --gold-dim: #8a7038;
+    --cream: #f2e8d5;
+    --cream-dim: #b8ac95;
+    --green: #4a8b5c;
+    --green-dark: #33613f;
+    --red: #b23a3a;
+    --red-dark: #7d2828;
+    --shadow: rgba(0,0,0,0.5);
+  }
+
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body{
+    margin:0; padding:0;
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Arial Narrow', Arial, Helvetica, sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
+    overscroll-behavior: none;
+  }
+
+  body{ padding: 14px 14px 40px; }
+
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom: 3px solid var(--gold);
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+  }
+
+  h1{
+    margin:0;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    letter-spacing: 1px;
+    font-size: 30px;
+    color: var(--gold);
+    text-shadow: 2px 2px 0 var(--shadow);
+  }
+
+  h1 span{ color: var(--cream); }
+
+  .reset-btn{
+    background: var(--panel-raised);
+    border: 1px solid var(--border);
+    color: var(--cream-dim);
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 6px;
+  }
+
+  /* ===== SCENE BAR ===== */
+  .scene-bar{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+
+  .scene-status{
+    flex:1;
+    min-width: 160px;
+  }
+
+  .scene-status .label{
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--cream-dim);
+  }
+
+  .scene-status .value{
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--gold);
+  }
+
+  .scene-btn{
+    font-family: Impact, Haettenschweiler, sans-serif;
+    letter-spacing: 1px;
+    font-size: 20px;
+    padding: 14px 26px;
+    border-radius: 8px;
+    border: none;
+    color: var(--cream);
+    min-height: 54px;
+  }
+
+  .scene-btn.start{ background: var(--green); border-bottom: 4px solid var(--green-dark); }
+  .scene-btn.end{ background: var(--red); border-bottom: 4px solid var(--red-dark); }
+  .scene-btn:active{ transform: translateY(2px); border-bottom-width: 2px; }
+
+  /* ===== COUNTERS ===== */
+  .counters{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  @media (min-width: 820px){
+    .counters{ grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .counter-card{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    text-align:center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .counter-card .name{
+    font-size: 17px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+
+  .counter-card .delta{
+    font-size: 13px;
+    height: 16px;
+    color: var(--gold);
+    margin-bottom: 4px;
+    font-weight: bold;
+  }
+
+  .counter-card .score{
+    font-family: Impact, Haettenschweiler, sans-serif;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--gold);
+    margin: 6px 0 12px;
+    text-shadow: 2px 2px 0 var(--shadow);
+  }
+
+  .counter-card .score.negative{ color: #d97a7a; }
+
+  .btn-row{
+    display:flex;
+    gap: 10px;
+  }
+
+  .pm-btn{
+    flex:1;
+    min-height: 62px;
+    border-radius: 10px;
+    border:none;
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--cream);
+    line-height: 1;
+  }
+
+  .pm-btn.minus{ background: var(--red); border-bottom: 4px solid var(--red-dark); }
+  .pm-btn.plus{ background: var(--green); border-bottom: 4px solid var(--green-dark); }
+  .pm-btn:active{ transform: translateY(2px); border-bottom-width: 2px; }
+
+  .flash{
+    animation: flash-anim 0.4s ease-out;
+  }
+  @keyframes flash-anim{
+    0%{ background: var(--gold-dim); }
+    100%{ background: transparent; }
+  }
+
+  /* ===== SCENE LOG ===== */
+  .scene-log{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+  }
+
+  .scene-log h2{
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--cream-dim);
+    margin: 0 0 8px;
+  }
+
+  .scene-log-entry{
+    font-size: 14px;
+    border-top: 1px solid var(--border);
+    padding: 6px 0;
+    color: var(--cream-dim);
+  }
+
+  .scene-log-entry:first-of-type{ border-top:none; }
+
+  .scene-log-entry b{ color: var(--cream); }
+
+  .empty-note{ color: var(--cream-dim); font-size: 13px; font-style: italic; }
+
+  /* ===== NOTES / CHECKLIST ===== */
+  .notes-section{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+
+  .notes-section h2{
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    margin: 0 0 12px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+
+  .add-row{
+    display:flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .add-row select{
+    background: var(--panel-raised);
+    border: 1px solid var(--border);
+    color: var(--cream);
+    border-radius: 8px;
+    padding: 0 10px;
+    font-size: 15px;
+  }
+
+  .add-row input[type="text"]{
+    flex:1;
+    background: var(--panel-raised);
+    border: 1px solid var(--border);
+    color: var(--cream);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 15px;
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  .add-row button{
+    background: var(--gold);
+    color: #2a2119;
+    border: none;
+    border-radius: 8px;
+    padding: 0 18px;
+    font-weight: bold;
+    font-size: 15px;
+  }
+
+  .checklist{
+    list-style: none;
+    margin:0; padding:0;
+  }
+
+  .checklist li{
+    display:flex;
+    align-items:flex-start;
+    gap: 10px;
+    padding: 10px 4px;
+    border-top: 1px solid var(--border);
+  }
+
+  .checklist li:first-child{ border-top:none; }
+
+  .tag{
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 7px;
+    border-radius: 5px;
+    font-weight: bold;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  .tag.rule{ background: var(--red-dark); color: #f0d0d0; }
+  .tag.prompt{ background: #2f4d63; color: #cfe4f2; }
+
+  .check-box{
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    border-radius: 6px;
+    border: 2px solid var(--gold-dim);
+    background: transparent;
+    margin-top: 1px;
+    position: relative;
+  }
+
+  .check-box.done{
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .check-box.done::after{
+    content: "✓";
+    position:absolute;
+    top:50%; left:50%;
+    transform: translate(-50%,-50%);
+    color: #2a2119;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .item-text{
+    flex:1;
+    font-size: 15px;
+    line-height: 1.4;
+    padding-top: 3px;
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  .item-text.done{
+    text-decoration: line-through;
+    color: var(--cream-dim);
+  }
+
+  .del-btn{
+    background: transparent;
+    border:none;
+    color: var(--cream-dim);
+    font-size: 20px;
+    padding: 0 6px;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>HOUSE <span>RULES</span></h1>
+  <button class="reset-btn" onclick="confirmReset()">Reset show</button>
+</header>
+
+<div class="scene-bar">
+  <div class="scene-status">
+    <div class="label" id="sceneLabel">No scene running</div>
+    <div class="value" id="sceneValue">Scene 0</div>
+  </div>
+  <button class="scene-btn start" id="sceneToggleBtn" onclick="toggleScene()">Start Scene</button>
+</div>
+
+<div class="counters" id="counters"></div>
+
+<div class="scene-log">
+  <h2>Scene log</h2>
+  <div id="sceneLog"><div class="empty-note">No scenes logged yet.</div></div>
+</div>
+
+<div class="notes-section">
+  <h2>Upcoming rules &amp; prompts</h2>
+  <div class="add-row">
+    <select id="newItemType">
+      <option value="rule">Rule</option>
+      <option value="prompt">Prompt</option>
+    </select>
+    <input type="text" id="newItemText" placeholder="e.g. Everyone is called Greg">
+    <button onclick="addItem()">Add</button>
+  </div>
+  <ul class="checklist" id="checklist"></ul>
+</div>
+
+<script>
+  const STORAGE_KEY = 'houseRulesState_v1';
+
+  const defaultState = {
+    contestants: [
+      { name: 'Ben', score: 0 },
+      { name: 'Emma T', score: 0 },
+      { name: 'Luke', score: 0 },
+      { name: 'Jack', score: 0 }
+    ],
+    sceneNumber: 0,
+    sceneActive: false,
+    sceneStartScores: null,
+    sceneLog: [],
+    checklist: []
+  };
+
+  let state = loadState();
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return JSON.parse(JSON.stringify(defaultState));
+      const parsed = JSON.parse(raw);
+      // basic shape safety
+      if(!parsed.contestants || parsed.contestants.length !== 4) throw new Error('bad shape');
+      return parsed;
+    }catch(e){
+      return JSON.parse(JSON.stringify(defaultState));
+    }
+  }
+
+  function saveState(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }catch(e){
+      // storage full or unavailable — fail silently, show still runs in-memory
+    }
+  }
+
+  function confirmReset(){
+    if(confirm('Reset all scores, scene log and checklist? This cannot be undone.')){
+      state = JSON.parse(JSON.stringify(defaultState));
+      saveState();
+      renderAll();
+    }
+  }
+
+  // ===== COUNTERS =====
+  function renderCounters(){
+    const wrap = document.getElementById('counters');
+    wrap.innerHTML = '';
+    state.contestants.forEach((c, i) => {
+      const card = document.createElement('div');
+      card.className = 'counter-card';
+      card.id = 'card-' + i;
+
+      let deltaHtml = '';
+      if(state.sceneActive && state.sceneStartScores){
+        const d = c.score - state.sceneStartScores[i];
+        if(d !== 0){
+          deltaHtml = (d > 0 ? '+' + d : d) + ' this scene';
+        }
+      }
+
+      card.innerHTML = `
+        <div class="name">${escapeHtml(c.name)}</div>
+        <div class="delta">${deltaHtml}</div>
+        <div class="score ${c.score < 0 ? 'negative' : ''}" id="score-${i}">${c.score}</div>
+        <div class="btn-row">
+          <button class="pm-btn minus" onclick="adjustScore(${i}, -1)">−</button>
+          <button class="pm-btn plus" onclick="adjustScore(${i}, 1)">+</button>
+        </div>
+      `;
+      wrap.appendChild(card);
+    });
+  }
+
+  function adjustScore(i, amount){
+    state.contestants[i].score += amount;
+    saveState();
+    renderCounters();
+    const card = document.getElementById('card-' + i);
+    card.classList.remove('flash');
+    void card.offsetWidth; // restart animation
+    card.classList.add('flash');
+  }
+
+  // ===== SCENE TRACKING =====
+  function toggleScene(){
+    if(!state.sceneActive){
+      state.sceneActive = true;
+      state.sceneNumber += 1;
+      state.sceneStartScores = state.contestants.map(c => c.score);
+    } else {
+      // end scene — log it
+      const changes = state.contestants.map((c, i) => c.score - state.sceneStartScores[i]);
+      state.sceneLog.unshift({
+        number: state.sceneNumber,
+        changes: changes.map((d, i) => ({ name: state.contestants[i].name, delta: d }))
+      });
+      state.sceneActive = false;
+      state.sceneStartScores = null;
+    }
+    saveState();
+    renderScene();
+    renderCounters();
+    renderSceneLog();
+  }
+
+  function renderScene(){
+    const label = document.getElementById('sceneLabel');
+    const value = document.getElementById('sceneValue');
+    const btn = document.getElementById('sceneToggleBtn');
+
+    if(state.sceneActive){
+      label.textContent = 'Scene in progress';
+      value.textContent = 'Scene ' + state.sceneNumber;
+      btn.textContent = 'End Scene';
+      btn.className = 'scene-btn end';
+    } else {
+      label.textContent = state.sceneNumber === 0 ? 'No scene running' : 'Last: Scene ' + state.sceneNumber;
+      value.textContent = 'Next: Scene ' + (state.sceneNumber + 1);
+      btn.textContent = 'Start Scene';
+      btn.className = 'scene-btn start';
+    }
+  }
+
+  function renderSceneLog(){
+    const wrap = document.getElementById('sceneLog');
+    if(state.sceneLog.length === 0){
+      wrap.innerHTML = '<div class="empty-note">No scenes logged yet.</div>';
+      return;
+    }
+    wrap.innerHTML = state.sceneLog.map(entry => {
+      const parts = entry.changes
+        .filter(c => c.delta !== 0)
+        .map(c => `${escapeHtml(c.name)} ${c.delta > 0 ? '+' + c.delta : c.delta}`)
+        .join(', ');
+      return `<div class="scene-log-entry"><b>Scene ${entry.number}:</b> ${parts || 'no change'}</div>`;
+    }).join('');
+  }
+
+  // ===== CHECKLIST =====
+  function addItem(){
+    const input = document.getElementById('newItemText');
+    const type = document.getElementById('newItemType').value;
+    const text = input.value.trim();
+    if(!text) return;
+    state.checklist.push({ text, type, done: false });
+    input.value = '';
+    saveState();
+    renderChecklist();
+  }
+
+  function toggleItem(idx){
+    state.checklist[idx].done = !state.checklist[idx].done;
+    saveState();
+    renderChecklist();
+  }
+
+  function deleteItem(idx){
+    state.checklist.splice(idx, 1);
+    saveState();
+    renderChecklist();
+  }
+
+  function renderChecklist(){
+    const list = document.getElementById('checklist');
+    if(state.checklist.length === 0){
+      list.innerHTML = '<li class="empty-note" style="border-top:none; padding-left:4px;">Nothing queued yet — add a rule or prompt above.</li>';
+      return;
+    }
+    list.innerHTML = state.checklist.map((item, i) => `
+      <li>
+        <button class="check-box ${item.done ? 'done' : ''}" onclick="toggleItem(${i})" aria-label="Mark done"></button>
+        <span class="tag ${item.type}">${item.type}</span>
+        <span class="item-text ${item.done ? 'done' : ''}">${escapeHtml(item.text)}</span>
+        <button class="del-btn" onclick="deleteItem(${i})" aria-label="Delete">✕</button>
+      </li>
+    `).join('');
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // allow Enter key to add item
+  document.getElementById('newItemText').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') addItem();
+  });
+
+  function renderAll(){
+    renderCounters();
+    renderScene();
+    renderSceneLog();
+    renderChecklist();
+  }
+
+  renderAll();
+</script>
+
+</body>
+</html>
