@@ -55,13 +55,90 @@
 
   h1 span{ color: var(--cream); }
 
-  .reset-btn{
+  /* ===== SHOW TIMER BAR ===== */
+  .timer-bar{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    background: var(--panel);
+    border: 1px solid var(--gold-dim);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .timer-readout{
+    display:flex;
+    align-items:baseline;
+    gap: 10px;
+  }
+
+  .timer-elapsed{
+    font-family: Impact, Haettenschweiler, sans-serif;
+    font-size: 40px;
+    color: var(--gold);
+    text-shadow: 2px 2px 0 var(--shadow);
+    line-height: 1;
+  }
+
+  .timer-remaining{
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--cream-dim);
+  }
+
+  .timer-remaining.warn{ color: #e0b84a; }
+  .timer-remaining.over{ color: #d97a7a; }
+
+  .timer-target{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size: 12px;
+    color: var(--cream-dim);
+  }
+
+  .timer-target input{
+    width: 52px;
+    background: var(--panel-raised);
+    border: 1px solid var(--border);
+    color: var(--cream);
+    border-radius: 6px;
+    padding: 6px;
+    font-size: 14px;
+    text-align:center;
+  }
+
+  .timer-buttons{
+    display:flex;
+    gap:10px;
+    margin-left: auto;
+  }
+
+  .timer-btn{
+    font-family: Impact, Haettenschweiler, sans-serif;
+    letter-spacing: 1px;
+    font-size: 17px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    color: var(--cream);
+    min-height: 48px;
+  }
+
+  .timer-btn.go{ background: var(--green); border-bottom: 4px solid var(--green-dark); }
+  .timer-btn.pause{ background: var(--gold); color: #2a2119; border-bottom: 4px solid var(--gold-dim); }
+  .timer-btn:active{ transform: translateY(2px); border-bottom-width: 2px; }
+
+  .timer-reset-btn{
     background: var(--panel-raised);
     border: 1px solid var(--border);
     color: var(--cream-dim);
     font-size: 13px;
-    padding: 8px 12px;
-    border-radius: 6px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    min-height: 48px;
   }
 
   /* ===== SCENE BAR ===== */
@@ -355,8 +432,22 @@
 
 <header>
   <h1>HOUSE <span>RULES</span></h1>
-  <button class="reset-btn" onclick="confirmReset()">Reset show</button>
 </header>
+
+<div class="timer-bar">
+  <div class="timer-readout">
+    <div class="timer-elapsed" id="timerElapsed">00:00</div>
+    <div class="timer-remaining" id="timerRemaining">35:00 left</div>
+  </div>
+  <div class="timer-target">
+    <span>Target (min)</span>
+    <input type="number" id="targetMinutes" min="1" max="180" value="35" onchange="updateTarget()">
+  </div>
+  <div class="timer-buttons">
+    <button class="timer-btn go" id="timerToggleBtn" onclick="toggleTimer()">Start Show</button>
+    <button class="timer-reset-btn" onclick="confirmReset()">Reset show</button>
+  </div>
+</div>
 
 <div class="scene-bar">
   <div class="scene-status">
@@ -400,7 +491,13 @@
     sceneActive: false,
     sceneStartScores: null,
     sceneLog: [],
-    checklist: []
+    checklist: [],
+    timer: {
+      running: false,
+      elapsedMs: 0,
+      startedAt: null,
+      targetMinutes: 35
+    }
   };
 
   let state = loadState();
@@ -412,6 +509,10 @@
       const parsed = JSON.parse(raw);
       // basic shape safety
       if(!parsed.contestants || parsed.contestants.length !== 4) throw new Error('bad shape');
+      // migrate older saved states that predate the timer feature
+      if(!parsed.timer){
+        parsed.timer = { running: false, elapsedMs: 0, startedAt: null, targetMinutes: 35 };
+      }
       return parsed;
     }catch(e){
       return JSON.parse(JSON.stringify(defaultState));
@@ -427,7 +528,8 @@
   }
 
   function confirmReset(){
-    if(confirm('Reset all scores, scene log and checklist? This cannot be undone.')){
+    if(confirm('Reset all scores, the timer, scene log and checklist? This cannot be undone.')){
+      stopTimerInterval();
       state = JSON.parse(JSON.stringify(defaultState));
       saveState();
       renderAll();
@@ -472,6 +574,87 @@
     card.classList.remove('flash');
     void card.offsetWidth; // restart animation
     card.classList.add('flash');
+  }
+
+  // ===== SHOW TIMER =====
+  let timerInterval = null;
+
+  function getElapsedMs(){
+    const t = state.timer;
+    return t.running ? t.elapsedMs + (Date.now() - t.startedAt) : t.elapsedMs;
+  }
+
+  function toggleTimer(){
+    const t = state.timer;
+    if(!t.running){
+      t.running = true;
+      t.startedAt = Date.now();
+      startTimerInterval();
+    } else {
+      t.elapsedMs = getElapsedMs();
+      t.running = false;
+      t.startedAt = null;
+      stopTimerInterval();
+    }
+    saveState();
+    renderTimerButton();
+    renderTimer();
+  }
+
+  function startTimerInterval(){
+    stopTimerInterval();
+    timerInterval = setInterval(renderTimer, 1000);
+  }
+
+  function stopTimerInterval(){
+    if(timerInterval){
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+  }
+
+  function updateTarget(){
+    const input = document.getElementById('targetMinutes');
+    let val = parseInt(input.value, 10);
+    if(isNaN(val) || val < 1) val = 1;
+    state.timer.targetMinutes = val;
+    saveState();
+    renderTimer();
+  }
+
+  function formatMs(ms){
+    const totalSeconds = Math.floor(Math.abs(ms) / 1000);
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    return (ms < 0 ? '-' : '') + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  function renderTimer(){
+    const elapsedMs = getElapsedMs();
+    document.getElementById('timerElapsed').textContent = formatMs(elapsedMs);
+
+    const targetMs = state.timer.targetMinutes * 60 * 1000;
+    const remainingMs = targetMs - elapsedMs;
+    const remainingEl = document.getElementById('timerRemaining');
+
+    remainingEl.textContent = (remainingMs < 0 ? formatMs(remainingMs) + ' over' : formatMs(remainingMs) + ' left');
+    remainingEl.className = 'timer-remaining';
+    if(remainingMs < 0){
+      remainingEl.classList.add('over');
+    } else if(remainingMs < 5 * 60 * 1000){
+      remainingEl.classList.add('warn');
+    }
+  }
+
+  function renderTimerButton(){
+    const btn = document.getElementById('timerToggleBtn');
+    if(state.timer.running){
+      btn.textContent = 'Pause';
+      btn.className = 'timer-btn pause';
+    } else {
+      btn.textContent = state.timer.elapsedMs > 0 ? 'Resume Show' : 'Start Show';
+      btn.className = 'timer-btn go';
+    }
   }
 
   // ===== SCENE TRACKING =====
@@ -585,6 +768,12 @@
     renderScene();
     renderSceneLog();
     renderChecklist();
+    document.getElementById('targetMinutes').value = state.timer.targetMinutes;
+    renderTimerButton();
+    renderTimer();
+    if(state.timer.running){
+      startTimerInterval();
+    }
   }
 
   renderAll();
