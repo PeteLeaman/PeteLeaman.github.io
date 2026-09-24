@@ -316,6 +316,7 @@
     display:flex;
     gap: 8px;
     margin-bottom: 12px;
+    flex-wrap: wrap;
   }
 
   .add-row select{
@@ -377,7 +378,8 @@
 
   .tag.rule{ background: var(--red-dark); color: #f0d0d0; }
   .tag.prompt{ background: #2f4d63; color: #cfe4f2; }
-  .tag.game{ background: #2f4d63; color: #cfe4f2; }
+  .tag.game{ background: #3d5c2f; color: #d8ecc9; }
+  .tag.show{ background: #5c4a2f; color: #ecdcc0; }
 
   .check-box{
     width: 26px;
@@ -466,15 +468,17 @@
 </div>
 
 <div class="notes-section">
-  <h2>Upcoming rules &amp; scenes</h2>
+  <h2>Upcoming rules &amp; prompts</h2>
   <div class="add-row">
     <select id="newItemType">
       <option value="rule">Rule</option>
       <option value="prompt">Prompt</option>
       <option value="game">Game</option>
+      <option value="show">Show</option>
     </select>
     <input type="text" id="newItemText" placeholder="e.g. Everyone is called Greg">
     <button onclick="addItem()">Add</button>
+    <button class="timer-reset-btn" onclick="confirmClearChecklist()">Clear list</button>
   </div>
   <ul class="checklist" id="checklist"></ul>
 </div>
@@ -530,9 +534,11 @@
   }
 
   function confirmReset(){
-    if(confirm('Reset all scores, the timer, scene log and checklist? This cannot be undone.')){
+    if(confirm('Reset all scores, the timer and scene log? Your rules/prompts checklist will be kept. This cannot be undone.')){
       stopTimerInterval();
+      const keepChecklist = state.checklist;
       state = JSON.parse(JSON.stringify(defaultState));
+      state.checklist = keepChecklist;
       saveState();
       renderAll();
     }
@@ -738,10 +744,18 @@
     renderChecklist();
   }
 
+  function confirmClearChecklist(){
+    if(confirm('Clear the entire rules/prompts checklist? This cannot be undone.')){
+      state.checklist = [];
+      saveState();
+      renderChecklist();
+    }
+  }
+
   function renderChecklist(){
     const list = document.getElementById('checklist');
     if(state.checklist.length === 0){
-      list.innerHTML = '<li class="empty-note" style="border-top:none; padding-left:4px;">Nothing queued yet — add a rule or scene above.</li>';
+      list.innerHTML = '<li class="empty-note" style="border-top:none; padding-left:4px;">Nothing queued yet — add a rule or prompt above.</li>';
       return;
     }
     list.innerHTML = state.checklist.map((item, i) => `
