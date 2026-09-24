@@ -429,6 +429,29 @@
     padding: 0 6px;
   }
 
+  .reorder-btns{
+    display:flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 1px;
+  }
+
+  .reorder-btn{
+    background: var(--panel-raised);
+    border: 1px solid var(--border);
+    color: var(--cream-dim);
+    font-size: 13px;
+    line-height: 1;
+    width: 28px;
+    height: 22px;
+    border-radius: 4px;
+    padding: 0;
+  }
+
+  .reorder-btn:disabled{
+    opacity: 0.25;
+  }
+
 </style>
 </head>
 <body>
@@ -490,8 +513,8 @@
     contestants: [
       { name: 'Ben', score: 0 },
       { name: 'Emma T', score: 0 },
-      { name: 'Jack', score: 0 },
-      { name: 'Luke', score: 0 }
+      { name: 'Luke', score: 0 },
+      { name: 'Jack', score: 0 }
     ],
     sceneNumber: 0,
     sceneActive: false,
@@ -744,6 +767,15 @@
     renderChecklist();
   }
 
+  function moveItem(idx, direction){
+    const newIdx = idx + direction;
+    if(newIdx < 0 || newIdx >= state.checklist.length) return;
+    const list = state.checklist;
+    [list[idx], list[newIdx]] = [list[newIdx], list[idx]];
+    saveState();
+    renderChecklist();
+  }
+
   function confirmClearChecklist(){
     if(confirm('Clear the entire rules/prompts checklist? This cannot be undone.')){
       state.checklist = [];
@@ -760,6 +792,10 @@
     }
     list.innerHTML = state.checklist.map((item, i) => `
       <li>
+        <div class="reorder-btns">
+          <button class="reorder-btn" onclick="moveItem(${i}, -1)" ${i === 0 ? 'disabled' : ''} aria-label="Move up">▲</button>
+          <button class="reorder-btn" onclick="moveItem(${i}, 1)" ${i === state.checklist.length - 1 ? 'disabled' : ''} aria-label="Move down">▼</button>
+        </div>
         <button class="check-box ${item.done ? 'done' : ''}" onclick="toggleItem(${i})" aria-label="Mark done"></button>
         <span class="tag ${item.type}">${item.type}</span>
         <span class="item-text ${item.done ? 'done' : ''}">${escapeHtml(item.text)}</span>
