@@ -377,6 +377,7 @@
 
   .tag.rule{ background: var(--red-dark); color: #f0d0d0; }
   .tag.prompt{ background: #2f4d63; color: #cfe4f2; }
+  .tag.game{ background: #2f4d63; color: #cfe4f2; }
 
   .check-box{
     width: 26px;
@@ -465,11 +466,12 @@
 </div>
 
 <div class="notes-section">
-  <h2>Upcoming rules &amp; prompts</h2>
+  <h2>Upcoming rules &amp; scenes</h2>
   <div class="add-row">
     <select id="newItemType">
       <option value="rule">Rule</option>
       <option value="prompt">Prompt</option>
+      <option value="game">Game</option>
     </select>
     <input type="text" id="newItemText" placeholder="e.g. Everyone is called Greg">
     <button onclick="addItem()">Add</button>
@@ -739,7 +741,7 @@
   function renderChecklist(){
     const list = document.getElementById('checklist');
     if(state.checklist.length === 0){
-      list.innerHTML = '<li class="empty-note" style="border-top:none; padding-left:4px;">Nothing queued yet — add a rule or prompt above.</li>';
+      list.innerHTML = '<li class="empty-note" style="border-top:none; padding-left:4px;">Nothing queued yet — add a rule or scene above.</li>';
       return;
     }
     list.innerHTML = state.checklist.map((item, i) => `
