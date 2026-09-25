@@ -956,7 +956,7 @@
   }
 
   // ===== SHOP PRESENTATION OVERLAY =====
-  let shopTimer = { running: false, remainingMs: 90000, intervalId: null, lastTick: null };
+  let shopTimer = { running: false, remainingMs: 60000, intervalId: null, lastTick: null };
 
   function openShop(){
     state.shop.lastPurchaseIndex = null;
@@ -976,7 +976,7 @@
   function resetShopTimer(){
     stopShopTimerInterval();
     shopTimer.running = false;
-    shopTimer.remainingMs = 90000;
+    shopTimer.remainingMs = 60000;
     renderShopTimerDisplay();
     document.getElementById('shopTimerToggleBtn').textContent = 'Start Timer';
   }
